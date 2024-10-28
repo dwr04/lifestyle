@@ -159,8 +159,8 @@
             });
         });
 
-        function setDateDisplay(date) {
-            const formattedDate = date.toISOString().split('T')[0];
+        function function setDateDisplay(date) {
+            const formattedDate = date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '-');
             document.getElementById("current-date-display").textContent = formattedDate;
         }
 
