@@ -142,6 +142,10 @@
             inputs.forEach(input => {
                 input.addEventListener('input', saveRecord);
             });
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', saveRecord);
+            });
             const today = new Date();
             setDateDisplay(today);
             loadRecord();
@@ -151,6 +155,12 @@
                 altFormat: "F j, Y",
                 allowInput: true,
                 onChange: function(selectedDates) {
+                    if (selectedDates.length > 0) {
+                        setDateDisplay(selectedDates[0]);
+                        loadRecord();
+                    } else {
+                        clearInputs();
+                    }
                     if (selectedDates.length > 0) {
                         setDateDisplay(selectedDates[0]);
                         saveRecord();
@@ -206,6 +216,7 @@
             };
 
             localStorage.setItem(`dailyRecord_${currentDate}`, JSON.stringify(record));
+        }
         }
             alert('记录已保存！');
         }
@@ -274,6 +285,8 @@
                 if (input.type !== 'file' && input.id !== 'calendar') {
                     input.value = '';
                 }
+            });
+        }
             });
         }
             });
