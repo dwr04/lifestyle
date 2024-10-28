@@ -149,6 +149,7 @@
                 onChange: function(selectedDates) {
                     if (selectedDates.length > 0) {
                         setDateDisplay(selectedDates[0]);
+                        loadRecord();
                     }
                 }
             });
@@ -171,6 +172,7 @@
         }
 
         function saveRecord() {
+            const currentDate = document.getElementById("current-date-display").textContent;
             const record = {
                 breakfast: document.getElementById('breakfast').value,
                 lunch: document.getElementById('lunch').value,
@@ -191,12 +193,13 @@
                 totalCalories: document.getElementById('total-calories').value
             };
 
-            localStorage.setItem('dailyRecord', JSON.stringify(record));
+            localStorage.setItem(`dailyRecord_${currentDate}`, JSON.stringify(record));
             alert('记录已保存！');
         }
 
         function loadRecord() {
-            const record = JSON.parse(localStorage.getItem('dailyRecord'));
+            const currentDate = document.getElementById("current-date-display").textContent;
+            const record = JSON.parse(localStorage.getItem(`dailyRecord_${currentDate}`));
             if (record) {
                 document.getElementById('breakfast').value = record.breakfast;
                 document.getElementById('lunch').value = record.lunch;
