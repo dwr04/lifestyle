@@ -138,6 +138,10 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', saveRecord);
+            });
             const today = new Date();
             setDateDisplay(today);
             loadRecord();
@@ -147,6 +151,10 @@
                 altFormat: "F j, Y",
                 allowInput: true,
                 onChange: function(selectedDates) {
+                    if (selectedDates.length > 0) {
+                        setDateDisplay(selectedDates[0]);
+                        saveRecord();
+                        loadRecord();
                     if (selectedDates.length > 0) {
                         setDateDisplay(selectedDates[0]);
                         saveCurrentDate();
@@ -177,7 +185,6 @@
 
         function saveRecord() {
             const currentDate = document.getElementById("current-date-display").textContent;
-            saveCurrentDate();
             const record = {
                 breakfast: document.getElementById('breakfast').value,
                 lunch: document.getElementById('lunch').value,
@@ -199,6 +206,7 @@
             };
 
             localStorage.setItem(`dailyRecord_${currentDate}`, JSON.stringify(record));
+        }
             alert('记录已保存！');
         }
 
