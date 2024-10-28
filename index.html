@@ -149,8 +149,8 @@
                 altFormat: "F j, Y",
                 allowInput: true,
                 defaultDate: new Date(),
-                onReady: function() {
-                    this.setDate(new Date(), true);
+                onReady: function(selectedDates, dateStr, instance) {
+                    instance.setDate(new Date(), true);
                 },
                 onChange: function(selectedDates) {
                     if (selectedDates.length > 0) {
@@ -206,4 +206,37 @@
 
         function loadRecord() {
             const currentDate = document.getElementById("current-date-display").textContent;
-            const record = JSON.parse(localStorage.getItem(`dailyRecord
+            const record = JSON.parse(localStorage.getItem(`dailyRecord_${currentDate}`));
+            if (record) {
+                document.getElementById('breakfast').value = record.breakfast;
+                document.getElementById('lunch').value = record.lunch;
+                document.getElementById('dinner').value = record.dinner;
+                document.getElementById('snacks').value = record.snacks;
+                document.getElementById('breakfast-calories').value = record.breakfastCalories;
+                document.getElementById('lunch-calories').value = record.lunchCalories;
+                document.getElementById('dinner-calories').value = record.dinnerCalories;
+                document.getElementById('snacks-calories').value = record.snacksCalories;
+                document.getElementById('sleep-time').value = record.sleepTime;
+                document.getElementById('wake-time').value = record.wakeTime;
+                document.getElementById('sleep-quality').value = record.sleepQuality;
+                document.getElementById('exercise').value = record.exercise;
+                document.getElementById('calories-burned').value = record.caloriesBurned;
+                document.getElementById('exercise-duration').value = record.exerciseDuration;
+                document.getElementById('mood').value = record.mood;
+                document.getElementById('weight').value = record.weight;
+                document.getElementById('total-calories').value = record.totalCalories;
+            } else {
+                clearInputs();
+            }
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('input, textarea').forEach(input => {
+                if (input.type !== 'file' && input.id !== 'calendar') {
+                    input.value = '';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
