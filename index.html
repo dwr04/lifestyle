@@ -140,6 +140,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const today = new Date();
             setDateDisplay(today);
+            loadRecord();
             flatpickr("#calendar", {
                 dateFormat: "Y-m-d",
                 altInput: true,
@@ -170,43 +171,51 @@
         }
 
         function saveRecord() {
-            const breakfast = document.getElementById('breakfast').value;
-            const lunch = document.getElementById('lunch').value;
-            const dinner = document.getElementById('dinner').value;
-            const snacks = document.getElementById('snacks').value;
-            const breakfastCalories = document.getElementById('breakfast-calories').value;
-            const lunchCalories = document.getElementById('lunch-calories').value;
-            const dinnerCalories = document.getElementById('dinner-calories').value;
-            const snacksCalories = document.getElementById('snacks-calories').value;
-            const sleepTime = document.getElementById('sleep-time').value;
-            const wakeTime = document.getElementById('wake-time').value;
-            const sleepQuality = document.getElementById('sleep-quality').value;
-            const exercise = document.getElementById('exercise').value;
-            const caloriesBurned = document.getElementById('calories-burned').value;
-            const exerciseDuration = document.getElementById('exercise-duration').value;
-            const mood = document.getElementById('mood').value;
-            const weight = document.getElementById('weight').value;
-            const totalCalories = document.getElementById('total-calories').value;
+            const record = {
+                breakfast: document.getElementById('breakfast').value,
+                lunch: document.getElementById('lunch').value,
+                dinner: document.getElementById('dinner').value,
+                snacks: document.getElementById('snacks').value,
+                breakfastCalories: document.getElementById('breakfast-calories').value,
+                lunchCalories: document.getElementById('lunch-calories').value,
+                dinnerCalories: document.getElementById('dinner-calories').value,
+                snacksCalories: document.getElementById('snacks-calories').value,
+                sleepTime: document.getElementById('sleep-time').value,
+                wakeTime: document.getElementById('wake-time').value,
+                sleepQuality: document.getElementById('sleep-quality').value,
+                exercise: document.getElementById('exercise').value,
+                caloriesBurned: document.getElementById('calories-burned').value,
+                exerciseDuration: document.getElementById('exercise-duration').value,
+                mood: document.getElementById('mood').value,
+                weight: document.getElementById('weight').value,
+                totalCalories: document.getElementById('total-calories').value
+            };
 
-            console.log('早餐:', breakfast);
-            console.log('午餐:', lunch);
-            console.log('晚餐:', dinner);
-            console.log('加餐:', snacks);
-            console.log('早餐热量:', breakfastCalories);
-            console.log('午餐热量:', lunchCalories);
-            console.log('晚餐热量:', dinnerCalories);
-            console.log('加餐热量:', snacksCalories);
-            console.log('睡觉时间:', sleepTime);
-            console.log('起床时间:', wakeTime);
-            console.log('睡眠质量:', sleepQuality);
-            console.log('运动类型:', exercise);
-            console.log('运动热量:', caloriesBurned);
-            console.log('运动时长:', exerciseDuration);
-            console.log('今日心情:', mood);
-            console.log('今日体重:', weight);
-            console.log('总热量:', totalCalories);
-
+            localStorage.setItem('dailyRecord', JSON.stringify(record));
             alert('记录已保存！');
+        }
+
+        function loadRecord() {
+            const record = JSON.parse(localStorage.getItem('dailyRecord'));
+            if (record) {
+                document.getElementById('breakfast').value = record.breakfast;
+                document.getElementById('lunch').value = record.lunch;
+                document.getElementById('dinner').value = record.dinner;
+                document.getElementById('snacks').value = record.snacks;
+                document.getElementById('breakfast-calories').value = record.breakfastCalories;
+                document.getElementById('lunch-calories').value = record.lunchCalories;
+                document.getElementById('dinner-calories').value = record.dinnerCalories;
+                document.getElementById('snacks-calories').value = record.snacksCalories;
+                document.getElementById('sleep-time').value = record.sleepTime;
+                document.getElementById('wake-time').value = record.wakeTime;
+                document.getElementById('sleep-quality').value = record.sleepQuality;
+                document.getElementById('exercise').value = record.exercise;
+                document.getElementById('calories-burned').value = record.caloriesBurned;
+                document.getElementById('exercise-duration').value = record.exerciseDuration;
+                document.getElementById('mood').value = record.mood;
+                document.getElementById('weight').value = record.weight;
+                document.getElementById('total-calories').value = record.totalCalories;
+            }
         }
     </script>
 </body>
