@@ -149,6 +149,9 @@
                 altFormat: "F j, Y",
                 allowInput: true,
                 defaultDate: new Date(),
+                onReady: function() {
+                    this.setDate(new Date(), true);
+                },
                 onChange: function(selectedDates) {
                     if (selectedDates.length > 0) {
                         setDateDisplay(selectedDates[0]);
