@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的生活日常记录</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .record {
+            background: #fff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <h1>我的生活日常记录 - <span id="current-date-display"></span></h1>
+
+    <div class="navigation">
+        <input type="text" id="calendar">
+    </div>
+
+    <div class="record">
+        <h2>饮食记录</h2>
+        <label for="breakfast">早餐：</label>
+        <textarea id="breakfast" placeholder="描述你的早餐"></textarea>
+        <label for="breakfast-calories">早餐热量（大卡）：</label>
+        <input type="number" id="breakfast-calories" placeholder="输入早餐热量">
+        <label for="breakfast-img">早餐图片：</label>
+        <input type="file" id="breakfast-img" accept="image/*">
+
+        <label for="lunch">午餐：</label>
+        <textarea id="lunch" placeholder="描述你的午餐"></textarea>
+        <label for="lunch-calories">午餐热量（大卡）：</label>
+        <input type="number" id="lunch-calories" placeholder="输入午餐热量">
+        <label for="lunch-img">午餐图片：</label>
+        <input type="file" id="lunch-img" accept="image/*">
+
+        <label for="dinner">晚餐：</label>
+        <textarea id="dinner" placeholder="描述你的晚餐"></textarea>
+        <label for="dinner-calories">晚餐热量（大卡）：</label>
+        <input type="number" id="dinner-calories" placeholder="输入晚餐热量">
+        <label for="dinner-img">晚餐图片：</label>
+        <input type="file" id="dinner-img" accept="image/*">
+
+        <label for="snacks">加餐：</label>
+        <textarea id="snacks" placeholder="描述你的加餐"></textarea>
+        <label for="snacks-calories">加餐热量（大卡）：</label>
+        <input type="number" id="snacks-calories" placeholder="输入加餐热量">
+        <label for="snacks-img">加餐图片：</label>
+        <input type="file" id="snacks-img" accept="image/*">
+    </div>
+
+    <div class="record">
+        <h2>睡眠记录</h2>
+        <label for="sleep-time">睡觉时间：</label>
+        <input type="time" id="sleep-time">
+
+        <label for="wake-time">起床时间：</label>
+        <input type="time" id="wake-time">
+
+        <label for="sleep-quality">睡眠质量（1-10）：</label>
+        <input type="number" id="sleep-quality" min="1" max="10" placeholder="输入睡眠质量评分">
+    </div>
+
+    <div class="record">
+        <h2>运动记录</h2>
+        <label for="exercise">运动类型：</label>
+        <textarea id="exercise" placeholder="描述你的运动类型"></textarea>
+
+        <label for="calories-burned">运动热量（大卡）：</label>
+        <input type="number" id="calories-burned" placeholder="输入运动消耗的热量">
+
+        <label for="exercise-duration">运动时长（分钟）：</label>
+        <input type="number" id="exercise-duration" placeholder="输入运动时长">
+    </div>
+
+    <div class="record">
+        <h2>心情记录</h2>
+        <label for="mood">今日心情：</label>
+        <textarea id="mood" placeholder="描述你的今日心情"></textarea>
+    </div>
+
+    <div class="record">
+        <h2>体重记录</h2>
+        <label for="weight">今日体重（kg）：</label>
+        <input type="number" id="weight" placeholder="输入你的体重">
+    </div>
+
+    <div class="record">
+        <h2>总热量计算</h2>
+        <label for="total-calories">总热量（大卡）：</label>
+        <input type="number" id="total-calories" readonly>
+        <button onclick="calculateTotalCalories()">计算总热量</button>
+    </div>
+
+    <button onclick="saveRecord()">保存记录</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const today = new Date();
+            setDateDisplay(today);
+            flatpickr("#calendar", {
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "F j, Y",
+                allowInput: true,
+                onChange: function(selectedDates) {
+                    if (selectedDates.length > 0) {
+                        setDateDisplay(selectedDates[0]);
+                    }
+                }
+            });
+        });
+
+        function setDateDisplay(date) {
+            const formattedDate = date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '-');
+            document.getElementById("current-date-display").textContent = formattedDate;
+        }
+
+        function calculateTotalCalories() {
+            const breakfastCalories = parseInt(document.getElementById('breakfast-calories').value) || 0;
+            const lunchCalories = parseInt(document.getElementById('lunch-calories').value) || 0;
+            const dinnerCalories = parseInt(document.getElementById('dinner-calories').value) || 0;
+            const snacksCalories = parseInt(document.getElementById('snacks-calories').value) || 0;
+            const exerciseCalories = parseInt(document.getElementById('calories-burned').value) || 0;
+
+            const totalCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories - exerciseCalories;
+            document.getElementById('total-calories').value = totalCalories;
+        }
+
+        function saveRecord() {
+            const breakfast = document.getElementById('breakfast').value;
+            const lunch = document.getElementById('lunch').value;
+            const dinner = document.getElementById('dinner').value;
+            const snacks = document.getElementById('snacks').value;
+            const breakfastCalories = document.getElementById('breakfast-calories').value;
+            const lunchCalories = document.getElementById('lunch-calories').value;
+            const dinnerCalories = document.getElementById('dinner-calories').value;
+            const snacksCalories = document.getElementById('snacks-calories').value;
+            const sleepTime = document.getElementById('sleep-time').value;
+            const wakeTime = document.getElementById('wake-time').value;
+            const sleepQuality = document.getElementById('sleep-quality').value;
+            const exercise = document.getElementById('exercise').value;
+            const caloriesBurned = document.getElementById('calories-burned').value;
+            const exerciseDuration = document.getElementById('exercise-duration').value;
+            const mood = document.getElementById('mood').value;
+            const weight = document.getElementById('weight').value;
+            const totalCalories = document.getElementById('total-calories').value;
+
+            console.log('早餐:', breakfast);
+            console.log('午餐:', lunch);
+            console.log('晚餐:', dinner);
+            console.log('加餐:', snacks);
+            console.log('早餐热量:', breakfastCalories);
+            console.log('午餐热量:', lunchCalories);
+            console.log('晚餐热量:', dinnerCalories);
+            console.log('加餐热量:', snacksCalories);
+            console.log('睡觉时间:', sleepTime);
+            console.log('起床时间:', wakeTime);
+            console.log('睡眠质量:', sleepQuality);
+            console.log('运动类型:', exercise);
+            console.log('运动热量:', caloriesBurned);
+            console.log('运动时长:', exerciseDuration);
+            console.log('今日心情:', mood);
+            console.log('今日体重:', weight);
+            console.log('总热量:', totalCalories);
+
+            alert('记录已保存！');
+        }
+    </script>
+</body>
+</html>
